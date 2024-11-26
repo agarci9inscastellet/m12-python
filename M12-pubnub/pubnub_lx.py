@@ -1,4 +1,5 @@
 import os
+import random
 import time
 
 from pubnub.pnconfiguration import PNConfiguration
@@ -21,7 +22,14 @@ class Listener(SubscribeListener):
 
 # here we create configuration for our pubnub instance
 class Pubnub_lx:
-    def __init__(self, userid, chanel, listener):
+    torn=0
+    mytorn=0
+    tim=random.randint(0,99)
+    ready=False
+    jugada=False
+    contrincant_id=False
+
+    def __init__(self, userid, chanel):
         config = PNConfiguration()
         ### cal agafar aquests tokens de la web pubnub, on diu Demo Keyset
         config.subscribe_key = 'sub-c-57344397-071a-462c-8c4d-c6be305a4e84'
@@ -32,30 +40,67 @@ class Pubnub_lx:
         config.daemon = True
 
         pubnub = PubNub(config)
-        pubnub.add_listener(Listener(listener))
 
         subscription = pubnub.channel(chanel).subscription()
-        #subscription.on_message = lambda message: print(f'\n<<< From {message.publisher}: {message.message}\n>>>',end="") if message.publisher != config.user_id else time.sleep(0.5)  
-        subscription.subscribe()
+        subscription.on_message = self.receiver
         time.sleep(0.5)
+        subscription.subscribe()
         subscribed_channels = pubnub.get_subscribed_channels()
         print("Subscribed channels:", subscribed_channels[0])
         self.pubnub = pubnub
-    
+
+        while not self.ready:
+            self.send( f"wait:{self.tim}") 
+            print (f"wait ... {self.ready} - {self.tim} >>> Esperant connexió")
+            time.sleep(0.5)
+            
+        #self.send( f"ready:{self.tim}") 
+        #pubnub.add_listener(Listener(listener))
+
+    def receiver(self, message):
+        #print("REBUT", message.publisher, message.message)
+
+        if (message.publisher == self.pubnub.config.user_id):
+            return
+                
+
+        self.contrincant_id=message.publisher
+        
+        code = message.message[0:4]
+      
+        if code in ["read","wait"]:
+           # if not self.ready:
+            #print (f"{code} ... {self.ready} - {self.tim} >>> Connetats amb {message.publisher}")
+            self.ready=int(message.message.split(":")[1])
+            self.mytorn = self.tim > self.ready 
+
+            if code=="wait":
+                self.send( f"ready:{self.tim}") 
+
+        else:
+            self.jugada=message.message
+            self.torn = not self.torn
+            #print("TOOORN ",self.torn)
+
+                
+    def play_opponent(self,msg=""):
+        if self.torn != self.mytorn:
+            if not msg:
+                msg=f"Esperant jugada de {self.contrincant_id}"
+            print(msg)
+            while self.torn != self.mytorn:
+                time.sleep(0.2)
+            return self.jugada
+        return False
+  
     def send(self, msg):
+
         subscribed_channels = self.pubnub.get_subscribed_channels()
         publish_result = self.pubnub.publish().channel( subscribed_channels[0]).message(msg).sync() 
+        #print (f"SEND {msg} {subscribed_channels[0]}... {self.ready} - {self.tim} >>> ENVIANT")
+        if not msg[0:4] in ["read","wait"]:
+            self.torn = not self.torn
         return publish_result
     
     def stop(self):
         self.pubnub.stop()
-'''    
-    def torn
-    
-    def wait_turn(self):
-        if  mytorn != torn:
-            print ("Waiting turn...")
-        while  mytorn != torn:
-            time.sleep(0.1)
-            torn+=1
-'''

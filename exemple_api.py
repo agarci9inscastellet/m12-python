@@ -8,19 +8,19 @@ from api_login import *
 
 #exemple de registre d'usuari
 print ("\nRegistrem per la app1, usuari=pepe3 amb pass=pepe3_pass ")
-print(api_register("app1","pepe3","pepe3_pass"))
+print(api_register("app1","pepe4","pepe4_pass"))
 
 
 
 #exemple de login exitos
 print ("\nFem login per la app1, usuari=pepe3 amb pass=pepe3_pass ")
-print(api_login("app1","pepe3","pepe3_pass"))
+print(api_login("app1","pepe4","pepe4_pass"))
 
 
 
 #exemple de login sense exit
 print ("\nFem login per la app1, usuari=pepe3 amb pass=wrong_pass ")
-print(api_login("app1","pepe3","wrong_pass"))
+print(api_login("app1","pepe4","wrong_pass"))
 
 
 

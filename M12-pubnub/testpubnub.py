@@ -1,12 +1,9 @@
 from pubnub_lx import *
-import time
+import random
 
 tauler=[[" "," "," "],[" "," "," "],[" "," "," "]]
-mysimbol=""
-theirsimbol=""
-torn = "x" 
-ready = False
-tim = time.time()
+simbol=["x","o"]
+mytorn = 0
 
 def print_tauler():
     global  tauler
@@ -18,29 +15,12 @@ def print_tauler():
     print(f"│ {tauler[2][0]} │ {tauler[2][1]} │ {tauler[2][2]} │") 
     print(f"└───┴───┴───┘") 
     
-
-
-def pubnub_listener(publisher, message):
-    global  tauler, ready, mysimbol, theirsimbol, tim, pubnub, torn
-    #print(f"[{publisher}]<<< {message}\n>>>\n\n")
-    if message.startswith("ready"):
-        ready = True
-        #print (f"zzzzz {message} zzzzzzzzzz ready:{tim}")
-        mysimbol = "x" if message > f"ready:{tim}" else "o"
-        theirsimbol = "o" if mysimbol == "x" else "x"
-        print ("El teu símbol: ",mysimbol)
-        if mysimbol == torn:
-            print ("És el teu torn")
-        return
-            
-   
-    coord = message.split(",")
-    tauler[int(coord[0])][int(coord[1])]=theirsimbol
-    print_tauler()
-    print (check_winner(tauler))
-    torn = mysimbol
-    print ("És el teu torn")
-
+def jugada_valida(coord, tauler):
+    if coord not in ["00","01","02","10","11","12","20","21","22"]:
+        return False
+    if tauler[int(coord[0])][int(coord[1])] != " ":
+        return False
+    return True
 
 def check_winner(grid):
     n = len(grid)  # Assuming grid is square (n x n)
@@ -71,34 +51,52 @@ def check_winner(grid):
 
 
     
-userid=input("El teu nom? ")
-pubn=Pubnub_lx(userid,"game",pubnub_listener)
-while not ready:
-    publish_result = pubn.send( f"ready:{tim}") 
-    print (f"ready ... {ready} - {tim} >>> Esperant connexió")
-    time.sleep(0.5)
-
-
-pubn.send(f"ready:{tim}") 
+#userid=input("El teu nom? ")
+userid="user"+str(random.randint(0, 99))
+## Creació del canal del joc
+pubn=Pubnub_lx(userid,"game") # "game" és el nom de la teva aplicació
+#miro qui comença
+mytorn = pubn.mytorn
 print_tauler()
 
+#########################################################################
+#########################################################################
+#########################################################################
 while True:
-    if  mysimbol != torn:
-        print ("Esperant jugada...")
-    while  mysimbol != torn:
-        time.sleep(0.1)
-    torn=theirsimbol
-    msg=input(">>>")
-    publish_result = pubn.send(msg) 
-    coord = msg.split(",")
-    tauler[int(coord[0])][int(coord[1])]=mysimbol
+    #juga l'oponent (si comences tu, retorna False)
+    coord = pubn.play_opponent()
+    if coord:
+        print(pubn.contrincant_id," ha jugat")
+        tauler[int(coord[0])][int(coord[1])]=simbol[not mytorn]
+        print_tauler()
+        win = check_winner(tauler)
+        if win:
+            print ("Ha guanyat ",pubn.contrincant_id)
+            break
+
+    #Jugues TU
+    print (f"És el teu torn, {userid}")
+
+    while True:
+        # Llegeico la jugada pel teclat
+        coord=input(">>>")
+        #valido la jugada
+        if jugada_valida(coord, tauler):
+            break
+        print("Jugada no vàlida!. Torna a jugar")
+        
+    ####################
+    # envia la jugada
+    pubn.send(coord) 
+    #######################
+    tauler[int(coord[0])][int(coord[1])]=simbol[mytorn]
     print_tauler()
-    print (check_winner(tauler))
-    
-    if msg=="quit":
+    win = check_winner(tauler)
+    if win:
+        print ("Has guanyatm ",userid)
         break
 
 
 
-pub.stop()
+pubn.stop()
 print('Bye.')
