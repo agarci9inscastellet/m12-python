@@ -11,15 +11,11 @@ def print_tauler(tauler, bcolor, tauler2, bcolor2):
         if txt=="A":
             txt= Back.BLUE+txt+bg
         if txt=="T":
-            txt = Back.YELLOW + txt + bg
-            
-        if txt=="H":
+            txt = Back.YELLOW + txt + bg      
+        if txt=="E":
             txt = Back.RED + txt + bg
         if txt.isnumeric():
             txt = Back.MAGENTA + txt + bg
-
-   
-        
         return txt
     
     sep=15
@@ -54,19 +50,39 @@ def print_tauler(tauler, bcolor, tauler2, bcolor2):
     print(bcolor+f"  └───┴───┴───┴───┴───┘"+Back.BLACK+" "*sep+bcolor2+"  └───┴───┴───┴───┴───┘") 
     print(Style.RESET_ALL)
 
+
+def coord(c):
+    val=ord(c)-49
+    if (val>10):
+        val-=16
+        
+    return val
+    
 ###################
 ### COORDENADES D'EXEMPLE    
 tauler[0][1]="2"
 tauler[0][2]="2"
-tauler[1][4]="3"
+tauler[1][4]="T"
 tauler[2][4]="3"
 tauler[3][4]="3"
+tauler[0][3]="A"
 
 
 tauler2[0][0]="A"
 tauler2[0][2]="T"
-tauler2[2][2]="H"
-tauler2[3][2]="H"
+tauler2[2][2]="E"
+tauler2[3][2]="E"
+tauler2[0][4]="A"
 
-print_tauler(tauler, Back.GREEN, tauler2, Back.CYAN)
+for row in tauler:
+    print (row)
+
+print_tauler(tauler2, Back.GREEN, tauler, Back.CYAN)
+
+
+while True:
+    c = input("coord  ").upper()
+    v = input("Valor  ").upper()
+    tauler2[coord(c[0])][coord(c[1])] = v
+    print_tauler(tauler2, Back.GREEN, tauler, Back.CYAN)
     
