@@ -47,7 +47,6 @@ while True:
             t = random.randint(0, 1)
             print("reposta RESULTAT: ",t)
             pubn.send(f"result: {t}")
-            pubn.torn = not pubn.torn
 
 
         
@@ -77,6 +76,6 @@ while True:
         print("")
         print("")
         print(f"{pubn.torn} --- {int(pubn.mytorn)}")
-        pubn.torn = not pubn.torn
+        #pubn.torn = not pubn.torn
         pubn.jugada = False
         pubn.response = False

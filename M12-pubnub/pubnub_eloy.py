@@ -86,6 +86,8 @@ class Pubnub_lx:
         self.jugada = False
         while not self.response:
             time.sleep(0.2)
+            
+        self.torn = not self.torn
         return self.response
                 
     def wait_opponent(self,msg=""):
@@ -97,6 +99,8 @@ class Pubnub_lx:
             time.sleep(0.2)
                 
         self.response = False
+        self.torn = not self.torn
+
         return self.jugada
   
     def send(self, msg):
