@@ -102,14 +102,14 @@ $app      = getParam('app');
 
 // Basic validation: most actions require name+pass+app, but 'userlist' only needs app
 if (empty($action) || empty($app)) {
-    echo json_encode(["status" => "error", "message" => "Missing parameters"]);
+    echo json_encode(["status" => "error", "message" => "Missing parameters111"]);
     exit();
 }
 
 // For register/login ensure name and pass provided
 if (in_array($action, ['register', 'login'])) {
     if (empty($username) || empty($password)) {
-        echo json_encode(["status" => "error", "message" => "Missing parameters"]);
+        echo json_encode(["status" => "error", "message" => "Missing parameters222"]);
         exit();
     }
 }
