@@ -41,4 +41,8 @@ def api_userlist(app):
     )
     response = urlopen(req).read()
     data_json = json.loads(response)
+    print(data_json)
+    return False
+    if data_json["status"] != "success":
+        return False
     return data_json["msg"]

@@ -8,7 +8,9 @@ from api_login import *
 
 #exemple de registre d'usuari
 print ("\nRegistrem per la app1, usuari=pepe3 amb pass=pepe3_pass ")
-print(api_register("app1","pepe4","pepe4_pass"))
+print(api_register("chess", "alex","mypasswordzz"))
+
+
 
 
 
@@ -23,8 +25,8 @@ print(api_login("app1","pepe4","wrong_pass"))
 
 
 #exemple de consulta d'usuaris
-print ("\nLlistem usuaris per app1:")
-print(api_userlist("app1"))
+print ("\nLlistem usuaris per chess:")
+print(api_userlist("chess"))
 
 
 

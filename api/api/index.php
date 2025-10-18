@@ -1,7 +1,7 @@
 <?php
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
-die("WWWW");
+die("QQQ");
 // ---------------------------------------------------
 // 1️⃣ Database connection (PDO + SQLite)
 // ---------------------------------------------------
@@ -98,11 +98,20 @@ function loginUser($username, $password, $app) {
 $action   = getParam('a');
 $username = getParam('name');
 $password = getParam('pass');
-$app     = getParam('app');
+$app      = getParam('app');
 
-if (empty($action) || empty($username) || empty($password) || empty($app)) {
+// Basic validation: most actions require name+pass+app, but 'userlist' only needs app
+if (empty($action) || empty($app)) {
     echo json_encode(["status" => "error", "message" => "Missing parameters"]);
     exit();
+}
+
+// For register/login ensure name and pass provided
+if (in_array($action, ['register', 'login'])) {
+    if (empty($username) || empty($password)) {
+        echo json_encode(["status" => "error", "message" => "Missing parameters"]);
+        exit();
+    }
 }
 
 switch ($action) {
@@ -112,6 +121,18 @@ switch ($action) {
 
     case 'login':
         loginUser($username, $password, $app);
+        break;
+
+    case 'userlist':
+        // Return list of usernames for the given app in the 'msg' field to match client
+        //echo "--------".$app;
+        $db = getDB();
+        $stmt = $db->prepare("SELECT username, password FROM users WHERE app = :g ORDER BY username ASC");
+        $stmt->bindValue(':g', $app);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+        echo json_encode(["status" => "success", "msg" => $rows]);
+
         break;
 
     default:
