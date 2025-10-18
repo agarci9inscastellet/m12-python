@@ -12,9 +12,7 @@ print(api_register("app1","pepe4","pepe4_pass"))
 
 
 
-#exemple de login exitos
-print ("\nFem login per la app1, usuari=pepe3 amb pass=pepe3_pass ")
-print(api_login("app1","pepe4","pepe4_pass"))
+
 
 
 

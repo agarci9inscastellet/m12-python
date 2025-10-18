@@ -3,28 +3,32 @@ from urllib.request import Request, urlopen
 # import json
 import json
 
+API_URL = "https://www.castellet2526m12.cat/api"
+
 def api_login(app, name, passw):
 
     req = Request(
-        url=f"http://www.castelletm12b.cat/api.php?a=login&app={app}&name={name}&pass={passw}", 
+        url=f"{API_URL}?a=login&app={app}&name={name}&pass={passw}", 
         headers={'User-Agent': 'Mozilla/5.0'}
     )
+    
     response = urlopen(req).read()
     data_json = json.loads(response)
-    return data_json["login"]
+    return data_json["status"] == "success"
 
 
 
 
 def api_register(app, name, passw):
+    print(f"{API_URL}?a=register&app={app}&name={name}&pass={passw}")
 
     req = Request(
-        url=f"http://www.castelletm12b.cat/api.php?a=register&app={app}&name={name}&pass={passw}", 
+        url=f"{API_URL}?a=register&app={app}&name={name}&pass={passw}", 
         headers={'User-Agent': 'Mozilla/5.0'}
     )
     response = urlopen(req).read()
     data_json = json.loads(response)
-    return data_json["success"]
+    return data_json["status"] == "success"
 
 
 
@@ -32,7 +36,7 @@ def api_register(app, name, passw):
 def api_userlist(app):
 
     req = Request(
-        url=f"http://www.castelletm12b.cat/api.php?a=userlist&app={app}", 
+        url=f"{API_URL}?a=userlist&app={app}", 
         headers={'User-Agent': 'Mozilla/5.0'}
     )
     response = urlopen(req).read()
