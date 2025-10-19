@@ -10,14 +10,20 @@ from api_login import *
 #testuser mypassword
 #pepe 1234
 
+'''
+#exemple de registre d'usuari
+print ("\nRegistrem per la app 'chess', usuari=pepe amb pass=1234 ")
+print(api_register("chess", "userdel","1234"))
+
 
 #exemple de registre d'usuari
-print ("\nRegistrem per la app1, usuari=pepe amb pass=1234 ")
-print(api_register("chess", "pepe","1234"))
+print ("\Esborrem per la app 'chess', usuari=userdel amb pass=1234 ")
+print(api_deleteuser("chess", "userdel","1234"))
+
 
 
 #exemple de login sense exit
-print ("\nFem login per la app1, usuari=alex amb pass=mypasswordzz ")
+print ("\nFem login per la app 'chess', usuari=alex amb pass=mypasswordzz ")
 print(api_login("chess","alex","mypasswordzz"))
 
 
@@ -25,7 +31,7 @@ print(api_login("chess","alex","mypasswordzz"))
 print ("\nLlistem usuaris per chess:")
 print(api_userlist("chess"))
 
-
+'''
 
 # exemple bucle login
 while True:

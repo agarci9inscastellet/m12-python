@@ -92,6 +92,38 @@ function loginUser($username, $password, $app) {
 }
 
 // ---------------------------------------------------
+// 6️⃣ Action: Delete user (requires name + pass + app)
+// ---------------------------------------------------
+function deleteUser($username, $password, $app) {
+    $db = getDB();
+
+    // Find user for that app
+    $stmt = $db->prepare("SELECT id, password FROM users WHERE username = :u AND app = :g");
+    $stmt->bindValue(':u', $username);
+    $stmt->bindValue(':g', $app);
+    $stmt->execute();
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$user) {
+        echo json_encode(["status" => "error", "message" => "User not found"]);
+        return;
+    }
+
+    // Verify password before deleting
+    if (!password_verify($password, $user['password'])) {
+        echo json_encode(["status" => "error", "message" => "Invalid credentials"]);
+        return;
+    }
+
+    // Delete the user
+    $stmt = $db->prepare("DELETE FROM users WHERE id = :id");
+    $stmt->bindValue(':id', $user['id'], PDO::PARAM_INT);
+    $stmt->execute();
+
+    echo json_encode(["status" => "success", "message" => "User deleted"]);
+}
+
+// ---------------------------------------------------
 // 5️⃣ Router: Decide action based on `a` parameter
 // ---------------------------------------------------
 $action   = getParam('a');
@@ -132,6 +164,11 @@ switch ($action) {
         $rows = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
         echo json_encode(["status" => "success", "msg" => $rows]);
 
+        break;
+
+    case 'deleteuser':
+        // delete user requires username + password + app
+        deleteUser($username, $password, $app);
         break;
 
     default:
