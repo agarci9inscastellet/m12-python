@@ -18,6 +18,7 @@ function getDB() {
                     username TEXT NOT NULL,
                     password TEXT NOT NULL,
                     app TEXT NOT NULL,
+                    punts INTEGER NOT NULL DEFAULT 0,
                     UNIQUE(username, app)
                 );
             ");
@@ -70,7 +71,7 @@ function registerUser($username, $password, $app) {
 function loginUser($username, $password, $app) {
     $db = getDB();
 
-    $stmt = $db->prepare("SELECT id, username, password, app FROM users WHERE username = :u AND app = :g");
+    $stmt = $db->prepare("SELECT id, username, password, app, punts FROM users WHERE username = :u AND app = :g");
     $stmt->bindValue(':u', $username);
     $stmt->bindValue(':g', $app);
     $stmt->execute();
@@ -83,7 +84,8 @@ function loginUser($username, $password, $app) {
             "user" => [
                 "id" => $user['id'],
                 "username" => $user['username'],
-                "app" => $user['app']
+                "app" => $user['app'],
+                "punts" => $user['punts']
             ]
         ]);
     } else {
@@ -91,8 +93,42 @@ function loginUser($username, $password, $app) {
     }
 }
 
+
+
 // ---------------------------------------------------
-// 6️⃣ Action: Delete user (requires name + pass + app)
+// 6️⃣ Action: Update user points
+// ---------------------------------------------------
+function updatePunts($username, $password, $app, $punts) {
+    $db = getDB();
+
+    // Verify user exists and password is correct
+    $stmt = $db->prepare("SELECT id, password FROM users WHERE username = :u AND app = :g");
+    $stmt->bindValue(':u', $username);
+    $stmt->bindValue(':g', $app);
+    $stmt->execute();
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$user) {
+        echo json_encode(["status" => "error", "message" => "User not found"]);
+        return;
+    }
+
+    if (!password_verify($password, $user['password'])) {
+        echo json_encode(["status" => "error", "message" => "Invalid credentials"]);
+        return;
+    }
+
+    // Update the points
+    $stmt = $db->prepare("UPDATE users SET punts = :punts WHERE id = :id");
+    $stmt->bindValue(':punts', $punts, PDO::PARAM_INT);
+    $stmt->bindValue(':id', $user['id'], PDO::PARAM_INT);
+    $stmt->execute();
+
+    echo json_encode(["status" => "success", "message" => "Points updated"]);
+}
+
+// ---------------------------------------------------
+// 7️⃣ Action: Delete user (requires name + pass + app)
 // ---------------------------------------------------
 function deleteUser($username, $password, $app) {
     $db = getDB();
@@ -129,6 +165,7 @@ function deleteUser($username, $password, $app) {
 $action   = getParam('a');
 $username = getParam('name');
 $password = getParam('pass');
+$punts = getParam('punts');
 $app      = getParam('app');
 
 // Basic validation: most actions require name+pass+app, but 'userlist' only needs app
@@ -153,6 +190,15 @@ switch ($action) {
     case 'login':
         loginUser($username, $password, $app);
         break;
+
+    case 'updatepunts':
+        if (empty($username) || empty($password) || !isset($_GET['punts'])) {
+            echo json_encode(["status" => "error", "message" => "Missing parameters for updatepunts"]);
+            exit();
+        }
+        updatePunts($username, $password, $app, intval($punts));
+        break;
+
 
     case 'userlist':
         // Return list of usernames for the given app in the 'msg' field to match client

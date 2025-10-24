@@ -32,6 +32,16 @@ print ("\nLlistem usuaris per chess:")
 print(api_userlist("chess"))
 
 '''
+#exemple de login sense exit
+print ("\nFem updatepunts per la app 'chess', usuari=alex amb pass=mypasswordzz ")
+print(api_updatepunts("chess","alex","mypasswordzz",32))
+
+
+
+#exemple de login sense exit
+print ("\nFem getpunts per la app 'chess', usuari=alex amb pass=mypasswordzz ")
+print(api_getpunts("chess","alex","mypasswordzz"))
+
 
 # exemple bucle login
 while True:
@@ -41,7 +51,8 @@ while True:
     
     
     if api_login(nom_aplicacio, username, passw):
-        print ("HAS ENTRAT!")
+        punts = api_getpunts(nom_aplicacio, username, passw)
+        print ("HAS ENTRAT!", username, "Tens ",punts," punts")
         break
     else:
         print ("El login ha fallat, Torna-ho a intentar... ")
