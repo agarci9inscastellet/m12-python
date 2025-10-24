@@ -13,8 +13,7 @@ from api_login import *
 '''
 #exemple de registre d'usuari
 print ("\nRegistrem per la app 'chess', usuari=pepe amb pass=1234 ")
-print(api_register("chess", "userdel","1234"))
-
+print(api_register("pedra", "andres","1234"))
 
 #exemple de registre d'usuari
 print ("\Esborrem per la app 'chess', usuari=userdel amb pass=1234 ")
@@ -31,21 +30,21 @@ print(api_login("chess","alex","mypasswordzz"))
 print ("\nLlistem usuaris per chess:")
 print(api_userlist("chess"))
 
-'''
+
 #exemple de login sense exit
 print ("\nFem updatepunts per la app 'chess', usuari=alex amb pass=mypasswordzz ")
-print(api_updatepunts("chess","alex","mypasswordzz",32))
+print(api_updatepunts("chess","alex","mypasswordzz",43))
 
 
 
 #exemple de login sense exit
 print ("\nFem getpunts per la app 'chess', usuari=alex amb pass=mypasswordzz ")
 print(api_getpunts("chess","alex","mypasswordzz"))
-
+'''
 
 # exemple bucle login
 while True:
-    nom_aplicacio  ="chess"
+    nom_aplicacio  =input("App: ")
     username = input("Nom: ")
     passw = input ("Contrasenya: ")
     
@@ -53,6 +52,8 @@ while True:
     if api_login(nom_aplicacio, username, passw):
         punts = api_getpunts(nom_aplicacio, username, passw)
         print ("HAS ENTRAT!", username, "Tens ",punts," punts")
+        print(api_updatepunts(nom_aplicacio, username, passw,int(input("Update punts: "))))
+
         break
     else:
         print ("El login ha fallat, Torna-ho a intentar... ")
