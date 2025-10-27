@@ -1,20 +1,25 @@
 from api_login import *
 
 
-# URL examples
-# http://www.castelletm12b.cat/api.php?a=userlist&app=lx
-# http://www.castelletm12b.cat/api.php?a=login&app=lx&name=pepe&pass=pepe_db
-# http://www.castelletm12b.cat/api.php?a=register&app=lx&name=pepe2&pass=pepe2_db
+# api_register("chess", "andres","1234")
+# api_deleteuser("chess", "userdel","1234")
+# api_login("chess","alex","mypasswordzz")
+# api_userlist("chess")
+# api_getpunts("chess","alex","mypasswordzz")
+# api_updatepunts("chess","alex","mypasswordzz",43)
 
-#alex mypasswordzz
-#testuser mypassword
-#pepe 1234
+
+# URL examples
+# http://www.castellet2526m12.cat/api.php?a=userlist&app=lx
+# http://www.castellet2526m12.cat/api.php?a=login&app=lx&name=pepe&pass=pepe_db
+# http://www.castellet2526m12.cat/api.php?a=register&app=lx&name=pepe2&pass=pepe2_db
+# http://www.castellet2526m12.cat/api.php?a=updatepuntsr&app=lx&name=pepe2&pass=pepe2_db
+
+#exemple de registre d'usuari
+print ("\nRegistrem per la app 'chess', usuari=manu amb pass=1234 ")
+print(api_register("chess", "manu2","1234"))
 
 '''
-#exemple de registre d'usuari
-print ("\nRegistrem per la app 'chess', usuari=pepe amb pass=1234 ")
-print(api_register("pedra", "andres","1234"))
-
 #exemple de registre d'usuari
 print ("\Esborrem per la app 'chess', usuari=userdel amb pass=1234 ")
 print(api_deleteuser("chess", "userdel","1234"))

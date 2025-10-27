@@ -68,7 +68,7 @@ def api_register(app, name, passw):
 def api_deleteuser(app, username, password):
     # Build request URL (quote parameters to be safe)
     req = Request(
-        url=f"{API_URL}?a=deleteuser&app={quote(app)}&name={quote(username)}&pass={quote(password)}",
+        url=f"{API_URL}?a=deleteuser&app={app}&name={username}&pass={password}",
         headers={'User-Agent': 'Mozilla/5.0'}
     )
     try:
