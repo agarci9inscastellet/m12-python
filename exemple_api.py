@@ -1,12 +1,11 @@
 from api_login import *
 
-
-# api_register("chess", "andres","1234")
-# api_deleteuser("chess", "userdel","1234")
-# api_login("chess","alex","mypasswordzz")
-# api_userlist("chess")
-# api_getpunts("chess","alex","mypasswordzz")
-# api_updatepunts("chess","alex","mypasswordzz",43)
+# api_register(app, "andres","1234")
+# api_deleteuser(app, "userdel","1234")
+# api_login(app,"alex","mypasswordzz")
+# api_userlist(app)
+# api_getpunts(app,"alex","mypasswordzz")
+# api_updatepunts(app,"alex","mypasswordzz",43)
 
 
 # URL examples
@@ -17,43 +16,71 @@ from api_login import *
 
 #exemple de registre d'usuari
 #print ("\nRegistrem per la app 'chess', usuari=manu amb pass=1234 ")
-#print(api_register("chess", "manu2","1234"))
+#print(api_register(app, "manu2","1234"))
 '''
+'''
+##############################################################################################
+app="chess" # és un exemple, aquí ha d'anar la teva app
+
+
+
 #exemple de consulta d'usuaris
-print ("\nLlistem usuaris per chess:")
-print(api_userlist("chess"))
+print("\n\n#############################")
+print("Prem una tecla")
+print("#############################\n\n")
+input("");
+
+print(api_userlist(app))
 
 #exemple de registre d'usuari
-print ("\Esborrem per la app 'chess', usuari=userdel amb pass=1234 ")
-print(api_deleteuser("chess", "alex","mypasswordzz"))
-print(api_register("chess", "alex","1234"))
+print (f"Esborrem per la app {app}, usuari=userdel amb pass=1234 ")
+print(api_deleteuser(app, "alex","mypasswordzz"))
+
+print("\n\n#############################")
+print("Prem una tecla")
+print("#############################\n\n")
+input("");
+
+print (f"Registrem per la app {app}, usuari=user2 amb pass=1234 ")
+print(api_register(app, "user2","1234"))
 
 
+print("\n\n#############################")
+print("Prem una tecla")
+print("#############################\n\n")
+input("");
+
+#exemple de login sense exit
+print (f"\nFem login per la app {app}, usuari=alex amb pass=1234 ")
+print(api_login(app,"alex","1234"))
+
+
+print("\n\n#############################")
+print("Prem una tecla")
+print("#############################\n\n")
+input("");
+
+
+#exemple de login sense exit
+print (f"\nFem updatepunts per la app {app}, usuari=alex amb pass=mypasswordzz ")
+print(api_updatepunts(app,"alex","1234",43))
 
 
 
 #exemple de login sense exit
-print ("\nFem login per la app 'chess', usuari=alex amb pass=mypasswordzz ")
-print(api_login("chess","alex","mypasswordzz"))
+print (f"\nFem getpunts per la app {app}, usuari=alex amb pass=mypasswordzz ")
+print(api_getpunts(app,"alex","mypasswordzz"))
 
 
+print("\n\n#############################")
+print("Prem una tecla")
+print("#############################\n\n")
+input("");
 
-
-
-#exemple de login sense exit
-print ("\nFem updatepunts per la app 'chess', usuari=alex amb pass=mypasswordzz ")
-print(api_updatepunts("chess","alex","mypasswordzz",43))
-
-
-
-#exemple de login sense exit
-print ("\nFem getpunts per la app 'chess', usuari=alex amb pass=mypasswordzz ")
-print(api_getpunts("chess","alex","mypasswordzz"))
-'''
-
+print("Fes un login amb un dels usuaris existents")
 # exemple bucle login
 while True:
-    nom_aplicacio  = "chess"
+    nom_aplicacio  = app
     username = input("Nom: ")
     passw = input ("Contrasenya: ")
     
