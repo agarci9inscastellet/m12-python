@@ -16,13 +16,19 @@ from api_login import *
 # http://www.castellet2526m12.cat/api.php?a=updatepuntsr&app=lx&name=pepe2&pass=pepe2_db
 
 #exemple de registre d'usuari
-print ("\nRegistrem per la app 'chess', usuari=manu amb pass=1234 ")
-print(api_register("chess", "manu2","1234"))
-
+#print ("\nRegistrem per la app 'chess', usuari=manu amb pass=1234 ")
+#print(api_register("chess", "manu2","1234"))
 '''
+#exemple de consulta d'usuaris
+print ("\nLlistem usuaris per chess:")
+print(api_userlist("chess"))
+
 #exemple de registre d'usuari
 print ("\Esborrem per la app 'chess', usuari=userdel amb pass=1234 ")
-print(api_deleteuser("chess", "userdel","1234"))
+print(api_deleteuser("chess", "alex","mypasswordzz"))
+print(api_register("chess", "alex","1234"))
+
+
 
 
 
@@ -31,9 +37,7 @@ print ("\nFem login per la app 'chess', usuari=alex amb pass=mypasswordzz ")
 print(api_login("chess","alex","mypasswordzz"))
 
 
-#exemple de consulta d'usuaris
-print ("\nLlistem usuaris per chess:")
-print(api_userlist("chess"))
+
 
 
 #exemple de login sense exit
@@ -49,7 +53,7 @@ print(api_getpunts("chess","alex","mypasswordzz"))
 
 # exemple bucle login
 while True:
-    nom_aplicacio  =input("App: ")
+    nom_aplicacio  = "chess"
     username = input("Nom: ")
     passw = input ("Contrasenya: ")
     
@@ -57,7 +61,7 @@ while True:
     if api_login(nom_aplicacio, username, passw):
         punts = api_getpunts(nom_aplicacio, username, passw)
         print ("HAS ENTRAT!", username, "Tens ",punts," punts")
-        print(api_updatepunts(nom_aplicacio, username, passw,int(input("Update punts: "))))
+        #print(api_updatepunts(nom_aplicacio, username, passw,int(input("Update punts: "))))
 
         break
     else:

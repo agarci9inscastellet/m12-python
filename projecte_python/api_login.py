@@ -1,3 +1,4 @@
+from os import *
 # import urllib library
 from urllib.request import Request, urlopen
 # import json
@@ -5,7 +6,7 @@ import json
 from urllib.parse import quote
 
 API_URL = "http://castellet2526m12.cat/api"
-
+system("clear")
 def api_login(app, name, passw):
 
     req = Request(

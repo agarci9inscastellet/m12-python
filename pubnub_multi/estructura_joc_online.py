@@ -1,0 +1,66 @@
+from pubnub_lx_multi import *
+import random
+
+#########################################################################
+#########################################################################
+#########################################################################
+# PREPAREM EL JOC
+#
+# Fem login. Mentre desenvolupem, en lloc de login fem un nom random    
+# username=login()
+username="user"+str(random.randint(0, 99))
+
+## Creació del canal del joc
+pubn=Pubnub_lx(username,"game") # "game" és el nom de la teva aplicació
+# lletres = "abcdefghijklmnopqrstuvz"
+# lletres = list(lletres)
+
+#########################################################################
+#########################################################################
+#########################################################################
+# BUCLE PRINCIPAL
+while True:
+    while True:
+    #########################################################################
+    #juga l'oponent (si comences tu, retorna False)
+    #########################################################################
+        while not pubn.is_my_turn():
+            print("esperem oponent")
+            jugada_oponent = pubn.play_opponent()
+            print(" oponent ... ", jugada_oponent)
+
+            if jugada_oponent:
+                print(pubn.contrincant_id," ha jugat ", jugada_oponent)
+                
+                lletra = jugada_oponent[0]
+                #processa la jugada de l'oponent
+                #marca la jugada al tauler
+                #comprova si ha guanyat, si són taules, si s'ha
+
+    #########################################################################
+    #Jugues TU
+    #########################################################################
+        print (f"És el teu torn, {username}")
+
+        # Llegeixo la jugada pel teclat
+        jugada_teva=input(">>>")
+        #valido la jugada
+            
+        ####################
+        # envia la jugada a l'oponent
+        if (jugada_teva == "next"):
+            pubn.next_player()
+        
+        pubn.send(jugada_teva) 
+
+            
+        #######################
+        
+        #processa la teva jugada
+        #marca la jugada al tauler
+        #comprova si has guanyat, si són taules, si t'has rendit....     
+        break
+
+
+pubn.stop()
+print('Bye.')

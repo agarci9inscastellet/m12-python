@@ -1,4 +1,5 @@
 <?php
+//phpinfo();
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 // ---------------------------------------------------
@@ -31,6 +32,20 @@ function getDB() {
 }
 
 // ---------------------------------------------------
+// Helper: Debug PDO statement with bound values
+// ---------------------------------------------------
+function debugPDOStatement($stmt, $params = array()) {
+    // Build a readable SQL string by replacing placeholders with values for debugging only.
+    // Use error_log() instead of echo to avoid corrupting JSON responses sent to clients.
+    $sql = $stmt->queryString;
+    foreach ($params as $key => $value) {
+        $quoted = is_string($value) ? "'" . str_replace("'", "\\'", $value) . "'" : $value;
+        $sql = str_replace($key, $quoted, $sql);
+    }
+    error_log("SQL with bound values: " . $sql);
+}
+
+// ---------------------------------------------------
 // 2️⃣ Helper: Get required GET parameters
 // ---------------------------------------------------
 function getParam($key) {
@@ -44,25 +59,34 @@ function registerUser($username, $password, $app) {
     $db = getDB();
 
     // Check if user already exists for that app
-    $stmt = $db->prepare("SELECT id FROM users WHERE username = :u AND app = :g");
-    $stmt->bindValue(':u', $username);
-    $stmt->bindValue(':g', $app);
-    $stmt->execute();
+    try {
+        $stmt = $db->prepare("SELECT id FROM users WHERE username = :u AND app = :g");
+        $stmt->bindValue(':u', $username);
+        $stmt->bindValue(':g', $app);
+        $stmt->execute();
+        // Log SQL to error log for debugging (doesn't break JSON output to clients)
+        debugPDOStatement($stmt, array(':u' => $username, ':g' => $app));
 
-    if ($stmt->fetch()) {
-        echo json_encode(["status" => "error", "message" => "User already exists for this app"]);
-        return;
+        if ($stmt->fetch()) {
+            echo json_encode(["status" => "error", "message" => "User already exists for this app"]);
+            return;
+        }
+
+        // Insert new user
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $stmt = $db->prepare("INSERT INTO users (username, password, app) VALUES (:u, :p, :g)");
+        $stmt->bindValue(':u', $username);
+        $stmt->bindValue(':p', $hashedPassword);
+        $stmt->bindValue(':g', $app);
+        debugPDOStatement($stmt, array(':u' => $username, ':g' => $app, ':p' => $hashedPassword));
+        $stmt->execute();
+
+        echo json_encode(["status" => "success", "message" => "User registered"]);
+    } catch (Exception $e) {
+        // Log internal error but return a simple JSON error to caller
+        error_log("registerUser error: " . $e->getMessage());
+        echo json_encode(["status" => "error", "message" => "Database error"]);
     }
-
-    // Insert new user
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    $stmt = $db->prepare("INSERT INTO users (username, password, app) VALUES (:u, :p, :g)");
-    $stmt->bindValue(':u', $username);
-    $stmt->bindValue(':p', $hashedPassword);
-    $stmt->bindValue(':g', $app);
-    $stmt->execute();
-
-    echo json_encode(["status" => "success", "message" => "User registered"]);
 }
 
 // ---------------------------------------------------
@@ -158,6 +182,7 @@ function deleteUser($username, $password, $app) {
 
     echo json_encode(["status" => "success", "message" => "User deleted"]);
 }
+
 
 // ---------------------------------------------------
 // 5️⃣ Router: Decide action based on `a` parameter

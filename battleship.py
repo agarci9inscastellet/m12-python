@@ -5,11 +5,11 @@ def login():
         nom = input("nom_: ")
         passw =  input("passw")
         
-        if api_login("app1",nom, passw):
+        if api_login("chess",nom, passw):
             print("Has entrat")
             break
             
-        print ("Torna-hi!")
+        print ("MAAAL! Torna-hi!")
         
         
 login()

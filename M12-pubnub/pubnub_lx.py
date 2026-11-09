@@ -82,7 +82,14 @@ class Pubnub_lx:
             self.torn = not self.torn
             #print("TOOORN ",self.torn)
 
-                
+               
+    def played_opponent(self):
+         if self.jugada:
+             ret = self.jugada
+             self.jugada = False
+             return ret
+         return False
+         
     def play_opponent(self,msg=""):
         if self.torn != self.mytorn:
             if not msg:

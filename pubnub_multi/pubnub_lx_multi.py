@@ -50,7 +50,7 @@ class Pubnub_lx:
         self.pubnub = pubnub
 
         while not self.ready:
-            self.send( f"wait:{self.tim}") 
+            self.send( f"_#@w:{self.tim}") 
             print (f"wait ... {self.ready} - {self.tim} >>> Esperant connexió")
             time.sleep(0.5)
             
@@ -58,49 +58,69 @@ class Pubnub_lx:
         #pubnub.add_listener(Listener(listener))
 
     def receiver(self, message):
-        #print("REBUT", message.publisher, message.message)
 
         if (message.publisher == self.pubnub.config.user_id):
             return
                 
+        print("REBUT", message.publisher, message.message," --- ",self.torn ," / ",self.mytorn)
 
         self.contrincant_id=message.publisher
         
         code = message.message[0:4]
       
-        if code in ["read","wait"]:
+        if code in ["_#@r","_#@w"]:
            # if not self.ready:
-            #print (f"{code} ... {self.ready} - {self.tim} >>> Connetats amb {message.publisher}")
+            print (f"{code} ... {self.ready} - {self.tim} >>> Connetats amb {message.publisher}")
             self.ready=int(message.message.split(":")[1])
-            self.mytorn = self.tim > self.ready 
+            self.mytorn = int(self.tim > self.ready) 
 
-            if code=="wait":
-                self.send( f"ready:{self.tim}") 
+            if code=="_#@w":
+                self.send( f"_#@r:{self.tim}") 
 
         else:
-            self.jugada=message.message
-            self.torn = not self.torn
-            #print("TOOORN ",self.torn)
-
-                
-    def play_opponent(self,msg=""):
+            if (code == "_#@n"):
+                self.torn = not self.torn
+            else:
+                self.jugada=message.message
+         
+    def play_opponent(self,msg=""):                  
         if self.torn != self.mytorn:
             if not msg:
                 msg=f"Esperant jugada de {self.contrincant_id}"
             print(msg)
             while self.torn != self.mytorn:
+                print("while ",self.torn ," / ",self.mytorn)
+
                 time.sleep(0.2)
             return self.jugada
         return False
-  
+               
+    def played_opponent(self):
+         if self.jugada:
+             ret = self.jugada
+             self.jugada = False
+             return ret
+         return False
+
+    
+    def is_my_turn(self):
+        time.sleep(0.2)
+        return  self.torn == self.mytorn
+
+        
     def send(self, msg):
 
         subscribed_channels = self.pubnub.get_subscribed_channels()
         publish_result = self.pubnub.publish().channel( subscribed_channels[0]).message(msg).sync() 
         #print (f"SEND {msg} {subscribed_channels[0]}... {self.ready} - {self.tim} >>> ENVIANT")
-        if not msg[0:4] in ["read","wait"]:
-            self.torn = not self.torn
+        if not msg[0:4] in ["_#@r","_#@w"]:
+            #self.torn = not self.torn
+            a=0
         return publish_result
+    
+    
+    def next_player(self):
+        self.send("_#@n") 
     
     def stop(self):
         self.pubnub.stop()

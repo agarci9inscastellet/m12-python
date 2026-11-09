@@ -12,7 +12,8 @@ username="user"+str(random.randint(0, 99))
 
 ## Creació del canal del joc
 pubn=Pubnub_lx(username,"game") # "game" és el nom de la teva aplicació
-
+# lletres = "abcdefghijklmnopqrstuvz"
+# lletres = list(lletres)
 
 #########################################################################
 #########################################################################
@@ -26,6 +27,8 @@ while True:
         jugada_oponent = pubn.play_opponent()
         if jugada_oponent:
             print(pubn.contrincant_id," ha jugat ", jugada_oponent)
+            
+            lletra = jugada_oponent[0]
             #processa la jugada de l'oponent
             #marca la jugada al tauler
             #comprova si ha guanyat, si són taules, si s'ha

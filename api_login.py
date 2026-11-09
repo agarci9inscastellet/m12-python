@@ -4,16 +4,17 @@ from urllib.request import Request, urlopen
 import json
 from urllib.parse import quote
 
-API_URL = "http://castellet2526m12.cat/api"
+API_URL = "https://m1713.techcastellet.cat/index.php"
 
 def api_login(app, name, passw):
-
+    urrl=f"{API_URL}?a=login&app={app}&name={name}&pass={passw}"
     req = Request(
         url=f"{API_URL}?a=login&app={app}&name={name}&pass={passw}", 
         headers={'User-Agent': 'Mozilla/5.0'}
     )
-    
+    print(urrl)
     response = urlopen(req).read()
+    print(response)
     data_json = json.loads(response)
     #print(data_json)
     return data_json["status"] == "success"
