@@ -24,15 +24,15 @@ while True:
     #########################################################################
     #juga l'oponent (si comences tu, retorna False)
     #########################################################################
+        print("li toca a l'oponent?", not pubn.is_my_turn())
         while not pubn.is_my_turn():
-            print("esperem oponent")
+            #print("esperem oponent")
             jugada_oponent = pubn.play_opponent()
-            print(" oponent ... ", jugada_oponent)
+            #print(" oponent ... ", jugada_oponent)
 
             if jugada_oponent:
                 print(pubn.contrincant_id," ha jugat ", jugada_oponent)
                 
-                lletra = jugada_oponent[0]
                 #processa la jugada de l'oponent
                 #marca la jugada al tauler
                 #comprova si ha guanyat, si són taules, si s'ha

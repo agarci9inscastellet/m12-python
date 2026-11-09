@@ -62,7 +62,7 @@ class Pubnub_lx:
         if (message.publisher == self.pubnub.config.user_id):
             return
                 
-        print("REBUT", message.publisher, message.message," --- ",self.torn ," / ",self.mytorn)
+        #print("REBUT", message.publisher, message.message," --- ",self.torn ," / ",self.mytorn)
 
         self.contrincant_id=message.publisher
         
@@ -70,7 +70,7 @@ class Pubnub_lx:
       
         if code in ["_#@r","_#@w"]:
            # if not self.ready:
-            print (f"{code} ... {self.ready} - {self.tim} >>> Connetats amb {message.publisher}")
+            #print (f"{code} ... {self.ready} - {self.tim} >>> Connetats amb {message.publisher}")
             self.ready=int(message.message.split(":")[1])
             self.mytorn = int(self.tim > self.ready) 
 
@@ -80,10 +80,20 @@ class Pubnub_lx:
         else:
             if (code == "_#@n"):
                 self.torn = not self.torn
+                #print("oponent perd el torn")
+
             else:
                 self.jugada=message.message
-         
-    def play_opponent(self,msg=""):                  
+                
+    def play_opponent(self,msg=""):     
+        self.jugada = False             
+        while not self.jugada:
+            time.sleep(0.2)
+        
+        return self.jugada
+
+
+    def play_opponentxx(self,msg=""):                  
         if self.torn != self.mytorn:
             if not msg:
                 msg=f"Esperant jugada de {self.contrincant_id}"
@@ -104,7 +114,7 @@ class Pubnub_lx:
 
     
     def is_my_turn(self):
-        time.sleep(0.2)
+        time.sleep(0.5)
         return  self.torn == self.mytorn
 
         
@@ -113,14 +123,17 @@ class Pubnub_lx:
         subscribed_channels = self.pubnub.get_subscribed_channels()
         publish_result = self.pubnub.publish().channel( subscribed_channels[0]).message(msg).sync() 
         #print (f"SEND {msg} {subscribed_channels[0]}... {self.ready} - {self.tim} >>> ENVIANT")
-        if not msg[0:4] in ["_#@r","_#@w"]:
-            #self.torn = not self.torn
-            a=0
+        # if not msg[0:4] in ["_#@r","_#@w"]:
+        #     #self.torn = not self.torn
+        #     a=0
         return publish_result
     
     
     def next_player(self):
         self.send("_#@n") 
+        self.torn = not self.torn
+        #print("perdo el torn")
+
     
     def stop(self):
         self.pubnub.stop()
