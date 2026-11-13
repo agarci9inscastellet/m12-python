@@ -28,6 +28,9 @@ class Pubnub_lx:
     ready=False
     jugada=False
     contrincant_id=False
+    
+    num_players = 3
+    players = [tim]
 
     def __init__(self, userid, chanel):
         config = PNConfiguration()
@@ -49,13 +52,10 @@ class Pubnub_lx:
         print("Subscribed channels:", subscribed_channels[0])
         self.pubnub = pubnub
 
-        while not self.ready:
+        while len(self.players) < self.num_players:
             self.send( f"_#@w:{self.tim}") 
-            print (f"wait ... {self.ready} - {self.tim} >>> Esperant connexió")
+            print (f"wait ... {self.ready} - {self.tim} >>> {self.players} >>> Esperant connexió")
             time.sleep(0.5)
-            
-        #self.send( f"ready:{self.tim}") 
-        #pubnub.add_listener(Listener(listener))
 
     def receiver(self, message):
 
@@ -71,11 +71,20 @@ class Pubnub_lx:
         if code in ["_#@r","_#@w"]:
            # if not self.ready:
             #print (f"{code} ... {self.ready} - {self.tim} >>> Connetats amb {message.publisher}")
-            self.ready=int(message.message.split(":")[1])
-            self.mytorn = int(self.tim > self.ready) 
+            #self.ready=int(message.message.split(":")[1])
+            #self.mytorn = int(self.tim > self.ready) 
+            tim = int(message.message.split(":")[1])
+            #print("---",message.message)
+            if (tim not in self.players):
+                self.players.append(tim)
+                print(self.players)
+                
+            
 
             if code=="_#@w":
                 self.send( f"_#@r:{self.tim}") 
+                
+                
 
         else:
             if (code == "_#@n"):

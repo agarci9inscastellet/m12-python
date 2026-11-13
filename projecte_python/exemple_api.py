@@ -1,3 +1,4 @@
+
 from api_login import *
 
 
@@ -35,7 +36,7 @@ print(api_userlist("blackjack"))
 
 # exemple bucle login
 while True:
-    nom_aplicacio  ="blackjack"
+    nom_aplicacio  ="chess"
     username = input("Nom: ")
     passw = input ("Contrasenya: ")
     

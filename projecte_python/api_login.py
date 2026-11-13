@@ -5,8 +5,7 @@ from urllib.request import Request, urlopen
 import json
 from urllib.parse import quote
 
-API_URL = "http://castellet2526m12.cat/api"
-system("clear")
+API_URL = "https://m1713.techcastellet.cat"
 def api_login(app, name, passw):
 
     req = Request(
